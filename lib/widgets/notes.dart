@@ -13,19 +13,22 @@ class Notes extends StatefulWidget {
 
 class _NotesState extends State<Notes> {
   final List<Note> _registeredNotes = [
-    Note(user: "John Doe", text: """Lorem ipsum dolor sit amet, consectetur 
-    adipiscing elit. Proin vitae aliquet urna, ac hendrerit felis. Quisque
-    tincidunt mi sed ipsum ullamcorper, quis posuere purus molestie. 
-    Curabitur lacinia posuere metus quis gravida. Nam a erat libero. Integer 
-    eu ullamcorper leo, et mattis sem. Quisque nibh massa, pulvinar in varius tempor, 
-    mollis ut felis. Pellentesque in tortor nec massa fermentum porta.""")
+    Note(
+        user: "John Doe",
+        text:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vitae aliquet urna, ac hendrerit felis. Quisquetincidunt mi sed ipsum ullamcorper, quis posuere purus molestie. Curabitur lacinia posuere metus quis gravida. Nam a erat libero. Integer eu ullamcorper leo, et mattis sem. Quisque nibh massa, pulvinar in varius tempor, mollis ut felis. Pellentesque in tortor nec massa fermentum porta.")
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notes"),
+        title: const Text(
+          "Notes",
+          style: TextStyle(
+            color: Colors.blue,
+          ),
+        ),
         leading: PopupMenuButton<String>(
           itemBuilder: (context) => [
             const PopupMenuItem(
@@ -33,7 +36,10 @@ class _NotesState extends State<Notes> {
               child: Text("Log out"),
             ),
           ],
-          icon: const Icon(Icons.menu),
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.blue,
+          ),
         ),
       ),
       body: Column(

@@ -12,20 +12,24 @@ class NoteItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _dialogBuilder(context),
         onLongPress: () {},
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Created by: ${note.user}",
-                style: const TextStyle(color: Colors.blue),
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(
                 height: 4,
               ),
               Text(
-                "${note.text.substring(0, note.text.length < 80 ? note.text.length : 80)}...",
+                "${note.text.substring(0, note.text.length < 100 ? note.text.length : 100)}...",
                 textAlign: TextAlign.left,
               ),
             ],
@@ -39,25 +43,42 @@ class NoteItem extends StatelessWidget {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: AppBar(
-            title: Text(
-              note.user,
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        note.user,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontSize: 24,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.blue,
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(note.text),
+                ],
+              ),
             ),
-            automaticallyImplyLeading: false,
-            actions: [
-              const SizedBox(
-                width: 20,
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.close),
-              ),
-            ],
           ),
-          content: Text(note.text),
         );
       },
     );
