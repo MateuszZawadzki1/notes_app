@@ -79,25 +79,47 @@ class _NotesState extends State<Notes> {
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: MediaQuery.of(context).size.height * 0.8,
             padding: const EdgeInsets.all(16),
-            child: const Column(
+            child: Column(
               children: [
-                Text(
+                const Text(
                   "Add new note",
-                  style: TextStyle(color: Colors.blue, fontSize: 20),
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Expanded(
+                const Expanded(
                   child: TextField(
+                    maxLines: null,
+                    minLines: null,
+                    expands: true,
+                    textAlignVertical: TextAlignVertical.top,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Enter note text..."),
                   ),
-                )
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text("Add"),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

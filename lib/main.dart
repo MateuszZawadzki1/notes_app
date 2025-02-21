@@ -4,6 +4,6 @@ import 'package:notes_app/widgets/notes.dart';
 void main() {
   runApp(const MaterialApp(
     home: Notes(),
-    // TODO: Theming
+    // TODO: Theming TextButton, TitleFont
   ));
 }
