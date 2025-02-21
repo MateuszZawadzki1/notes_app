@@ -57,7 +57,7 @@ class _NotesState extends State<Notes> {
                     shape: CircleBorder(),
                   ),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () => _dialogBuilderNewNote(context),
                     icon: const Icon(
                       Icons.add,
                       size: 40,
@@ -70,6 +70,39 @@ class _NotesState extends State<Notes> {
           )
         ],
       ),
+    );
+  }
+
+  Future<void> _dialogBuilderNewNote(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.7,
+            padding: const EdgeInsets.all(16),
+            child: const Column(
+              children: [
+                Text(
+                  "Add new note",
+                  style: TextStyle(color: Colors.blue, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter note text..."),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
