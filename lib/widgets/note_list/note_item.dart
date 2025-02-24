@@ -11,7 +11,7 @@ class NoteItem extends StatelessWidget {
     return Card(
       child: GestureDetector(
         onTap: () => _dialogBuilder(context),
-        onLongPress: () {},
+        onLongPress: () => _dialogBuilderRemove(context),
         child: Container(
           padding: const EdgeInsets.all(16),
           width: double.infinity,
@@ -83,4 +83,23 @@ class NoteItem extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> _dialogBuilderRemove(BuildContext context) {
+  return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Please confirm"),
+          content: const Text("Are you sure you want to remove this note?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("No")),
+            TextButton(onPressed: () {}, child: const Text("Yes"))
+          ],
+        );
+      });
 }
