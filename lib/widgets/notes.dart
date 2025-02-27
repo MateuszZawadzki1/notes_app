@@ -84,12 +84,16 @@ class _NotesState extends State<Notes> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Text(
-                  "Add new note",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
-                  ),
+                const Row(
+                  children: [
+                    Text(
+                      "Add new note",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -112,11 +116,21 @@ class _NotesState extends State<Notes> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text("Cancel"),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Add"),
+                      child: const Text(
+                        "Add",
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
                     ),
                   ],
                 ),
