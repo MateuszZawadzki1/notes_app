@@ -23,8 +23,13 @@ class AuthService {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      accessToken = data["access_token"];
-      return true;
+      if (data["access_token"] != null &&
+          data["access_token"].toString().isNotEmpty) {
+        accessToken = data["access_token"];
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
