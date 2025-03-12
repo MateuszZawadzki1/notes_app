@@ -10,10 +10,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Instancja AuthService jest tworzona tylko raz – tutaj w polu klasy.
   final AuthService authService = AuthService();
 
-  // Kontrolery do pobierania danych z pól tekstowych.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -35,14 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       if (!success) {
-        // Jeśli logowanie nie powiodło się, ustaw komunikat błędu i zakończ funkcję
         setState(() {
           _errorMessage = "Invalid email or password";
         });
         return;
       }
 
-      // Jeśli logowanie powiodło się, przechodzimy do ekranu notatek
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Notes()),
@@ -94,14 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            // Wyświetlamy komunikat o błędzie, jeśli wystąpił.
             if (_errorMessage != null)
               Text(
                 _errorMessage!,
                 style: const TextStyle(color: Colors.red),
               ),
             const SizedBox(height: 20),
-            // Jeśli trwa ładowanie, pokazujemy loader, inaczej przycisk logowania.
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
