@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/models/note.dart';
 
 class NoteItem extends StatelessWidget {
-  const NoteItem(this.note, {super.key});
+  const NoteItem({
+    super.key,
+    required this.note,
+    required this.onDelete,
+  });
 
   final Note note;
+  final Function(int) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -83,23 +88,29 @@ class NoteItem extends StatelessWidget {
       },
     );
   }
-}
 
-Future<void> _dialogBuilderRemove(BuildContext context) {
-  return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Please confirm"),
-          content: const Text("Are you sure you want to remove this note?"),
-          actions: [
-            TextButton(
+  Future<void> _dialogBuilderRemove(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Please confirm"),
+            content: const Text("Are you sure you want to remove this note?"),
+            actions: [
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text("No")),
-            TextButton(onPressed: () {}, child: const Text("Yes"))
-          ],
-        );
-      });
+                child: const Text("No"),
+              ),
+              TextButton(
+                  onPressed: () {
+                    onDelete(note.id!);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Yes"))
+            ],
+          );
+        });
+  }
 }
