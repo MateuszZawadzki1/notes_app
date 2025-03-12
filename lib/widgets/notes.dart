@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/models/note.dart';
+import 'package:notes_app/services/auth_service.dart';
+import 'package:notes_app/services/supabase_service.dart';
 import 'package:notes_app/widgets/note_list/note_list.dart';
 
 class Notes extends StatefulWidget {
@@ -12,12 +14,48 @@ class Notes extends StatefulWidget {
 }
 
 class _NotesState extends State<Notes> {
-  final List<Note> _registeredNotes = [
-    Note(
-        user: "John Doe",
-        text:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vitae aliquet urna, ac hendrerit felis. Quisquetincidunt mi sed ipsum ullamcorper, quis posuere purus molestie. Curabitur lacinia posuere metus quis gravida. Nam a erat libero. Integer eu ullamcorper leo, et mattis sem. Quisque nibh massa, pulvinar in varius tempor, mollis ut felis. Pellentesque in tortor nec massa fermentum porta.")
-  ];
+  final SupabaseService _supabaseService = SupabaseService(AuthService());
+  List<Note> _notes = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNotes();
+  }
+
+  Future<void> _fetchNotes() async {
+    try {
+      final notes = await _supabaseService.fetchNotes();
+      setState(() {
+        _notes = notes;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error: fetch notes $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _addNote(String text) async {
+    try {
+      await _supabaseService.addNote(text);
+      _fetchNotes();
+    } catch (e) {
+      print("Error: Add note $e");
+    }
+  }
+
+  Future<void> _deleteNote(int id) async {
+    try {
+      await _supabaseService.deleteNote(id.toString());
+      _fetchNotes();
+    } catch (e) {
+      print("Error: delete note $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,38 +80,44 @@ class _NotesState extends State<Notes> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(child: NoteList(notes: _registeredNotes)),
-          Expanded(child: Container()),
-          Padding(
-            padding: const EdgeInsets.only(right: 30, bottom: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
               children: [
-                Ink(
-                  decoration: const ShapeDecoration(
-                    color: Colors.blue,
-                    shape: CircleBorder(),
+                Expanded(child: NoteList(notes: _notes, onDelete: _deleteNote)),
+                Expanded(child: Container()),
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.blue,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          onPressed: () => _dialogBuilderNewNote(context),
+                          icon: const Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: IconButton(
-                    onPressed: () => _dialogBuilderNewNote(context),
-                    icon: const Icon(
-                      Icons.add,
-                      size: 40,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                )
               ],
             ),
-          )
-        ],
-      ),
     );
   }
 
   Future<void> _dialogBuilderNewNote(BuildContext context) {
+    TextEditingController _noteController = TextEditingController();
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -98,13 +142,14 @@ class _NotesState extends State<Notes> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Expanded(
+                Expanded(
                   child: TextField(
+                    controller: _noteController,
                     maxLines: null,
                     minLines: null,
                     expands: true,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Enter note text..."),
                   ),
@@ -124,7 +169,12 @@ class _NotesState extends State<Notes> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_noteController.text.isNotEmpty) {
+                          _addNote(_noteController.text);
+                          Navigator.of(context).pop();
+                        }
+                      },
                       child: const Text(
                         "Add",
                         style: TextStyle(

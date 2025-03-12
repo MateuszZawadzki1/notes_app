@@ -26,7 +26,7 @@ class SupabaseService {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((note) => Note.fromJson(note)).toList();
     } else {
-      throw Exception("Error with get notes");
+      return [];
     }
   }
 
