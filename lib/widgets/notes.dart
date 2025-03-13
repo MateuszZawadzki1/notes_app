@@ -169,11 +169,12 @@ class _NotesState extends State<Notes> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_noteController.text.isNotEmpty) {
-                          _addNote(_noteController.text);
-                          Navigator.of(context).pop();
+                          await _addNote(_noteController.text);
+                          await _fetchNotes();
                         }
+                        Navigator.of(context).pop();
                       },
                       child: const Text(
                         "Add",
