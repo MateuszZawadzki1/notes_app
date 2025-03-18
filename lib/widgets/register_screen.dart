@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/widgets/notes.dart';
-import 'package:notes_app/widgets/register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService authService = AuthService();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isLoading = false;
   String? _errorMessage;
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
+    if (_passwordController.text != _confirmPasswordController.text) {
+      setState(() {
+        _errorMessage = "Passwords do not match";
+        _isLoading = false;
+      });
+      return;
+    }
+
     try {
-      final bool success = await authService.login(
+      final bool success = await authService.register(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
@@ -35,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!success) {
         setState(() {
-          _errorMessage = "Invalid email or password";
+          _errorMessage = "Registration failed";
         });
         return;
       }
@@ -60,15 +68,22 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text("Register"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.person_2_outlined, size: 80),
-            const SizedBox(height: 20),
             const Text(
-              "Log in",
+              "Create an account",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -89,6 +104,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 10),
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Confirm Password",
+              ),
+            ),
+            const SizedBox(height: 10),
             if (_errorMessage != null)
               Text(
                 _errorMessage!,
@@ -98,23 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _login,
-                    child: const Text("Log in"),
+                    onPressed: _register,
+                    child: const Text("Register"),
                   ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterScreen()));
-                },
-                child: const Text(
-                  "Create an account",
-                  style: TextStyle(color: Colors.blue),
-                ))
           ],
         ),
       ),

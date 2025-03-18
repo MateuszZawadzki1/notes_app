@@ -106,10 +106,21 @@ class _NotesState extends State<Notes> {
           icon: const Icon(Icons.menu, color: Colors.blue),
           onSelected: (value) async {
             if (value == "Log out") {
-              //await _supabaseService.authService.signOut();
-              print("Proba wylogowania");
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
+              try {
+                await _supabaseService.authService.signOut();
+                if (mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
+                }
+              } catch (e) {
+                print("Logout error: $e");
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error logging out: $e")));
+                }
               }
             }
           },

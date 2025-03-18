@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; // Dodaj ten import
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/services/supabase_service.dart';
 import 'package:notes_app/widgets/login_screen.dart';
 import 'package:notes_app/widgets/notes.dart';
+import 'package:notes_app/widgets/register_screen.dart';
 
 void main() async {
-  // Upewnij się, że Flutter jest zainicjowany przed Supabase
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Inicjalizacja Supabase
   await Supabase.initialize(
     url: 'https://rjqxcoszkschqdnrriio.supabase.co',
     anonKey:
@@ -20,7 +18,11 @@ void main() async {
   final supabaseService = SupabaseService(authService);
 
   runApp(MaterialApp(
-    home: LoginScreen(), // Startuje z ekranu logowania
-    // TODO: Theming TextButton, TitleFont
+    initialRoute: '/login',
+    routes: {
+      '/login': (context) => const LoginScreen(),
+      '/register': (context) => const RegisterScreen(),
+      '/notes': (context) => const Notes(),
+    },
   ));
 }

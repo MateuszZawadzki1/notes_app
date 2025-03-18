@@ -29,4 +29,8 @@ class AuthService {
       return false;
     }
   }
+
+  Future<void> signOut() async {
+    await Supabase.instance.client.auth.signOut();
+  }
 }
