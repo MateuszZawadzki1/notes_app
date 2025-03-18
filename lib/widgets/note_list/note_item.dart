@@ -24,7 +24,7 @@ class NoteItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Created by: ${note.user}",
+                "Created by: Username",
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
@@ -34,7 +34,7 @@ class NoteItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                "${note.text.substring(0, note.text.length < 100 ? note.text.length : 100)}...",
+                "${note.text!.substring(0, note.text!.length < 100 ? note.text!.length : 100)}...", // Change it
                 textAlign: TextAlign.left,
               ),
             ],
@@ -58,7 +58,7 @@ class NoteItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        note.user,
+                        "Username",
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 24,
@@ -79,7 +79,7 @@ class NoteItem extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  Text(note.text),
+                  Text(note.text!), // Change it
                 ],
               ),
             ),

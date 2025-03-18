@@ -1,52 +1,32 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final String _baseUrl = "https://rjqxcoszkschqdnrriio.supabase.co/auth/v1";
-  final String _apiKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcXhjb3N6a3NjaHFkbnJyaWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA3NTM1NjUsImV4cCI6MjA0NjMyOTU2NX0.z644HIZnUFUOVQEkNiO0o_ctmWUdEgkwtgiAT_ocYuE";
-
-  String? accessToken;
+  String? get accessToken =>
+      Supabase.instance.client.auth.currentSession?.accessToken;
 
   Future<bool> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse("$_baseUrl/token?grant_type=password"),
-      headers: {
-        "Content-type": "application/json",
-        "apikey": _apiKey,
-      },
-      body: jsonEncode({
-        "email": email,
-        "password": password,
-      }),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data["access_token"] != null &&
-          data["access_token"].toString().isNotEmpty) {
-        accessToken = data["access_token"];
-        return true;
-      } else {
-        return false;
-      }
-    } else {
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      return response.session != null; // Zwraca true, jeśli sesja istnieje
+    } catch (e) {
+      print("Login error: $e");
       return false;
     }
   }
 
   Future<bool> register(String email, String password) async {
-    final response = await http.post(
-      Uri.parse("$_baseUrl/signup"),
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": _apiKey,
-      },
-      body: jsonEncode({
-        "email": email,
-        "password": password,
-      }),
-    );
-    return response.statusCode == 200;
+    try {
+      final response = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+      return response.user != null; // Zwraca true, jeśli użytkownik utworzony
+    } catch (e) {
+      print("Register error: $e");
+      return false;
+    }
   }
 }

@@ -8,9 +8,7 @@ class Notes extends StatefulWidget {
   const Notes({super.key});
 
   @override
-  State<Notes> createState() {
-    return _NotesState();
-  }
+  State<Notes> createState() => _NotesState();
 }
 
 class _NotesState extends State<Notes> {
@@ -21,39 +19,78 @@ class _NotesState extends State<Notes> {
   @override
   void initState() {
     super.initState();
-    _fetchNotes();
+    _checkSession();
+  }
+
+  Future<void> _checkSession() async {
+    if (_supabaseService.authService.accessToken == null) {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } else {
+      _fetchNotes();
+    }
   }
 
   Future<void> _fetchNotes() async {
     try {
       final notes = await _supabaseService.fetchNotes();
-      setState(() {
-        _notes = notes;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _notes = notes ?? []; // Zabezpieczenie przed null
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print("Error: fetch notes $e");
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _notes = []; // Pusta lista w razie błędu
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _addNote(String text) async {
     try {
-      await _supabaseService.addNote(text);
-      _fetchNotes();
+      final success = await _supabaseService.addNote(text);
+      if (success && mounted) {
+        await _fetchNotes();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Note added successfully')),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add note')),
+        );
+      }
     } catch (e) {
       print("Error: Add note $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error adding note: $e')),
+        );
+      }
     }
   }
 
   Future<void> _deleteNote(int id) async {
     try {
-      await _supabaseService.deleteNote(id.toString());
-      _fetchNotes();
+      final success = await _supabaseService.deleteNote(id.toString());
+      if (success && mounted) {
+        await _fetchNotes();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Note deleted successfully')),
+        );
+      }
     } catch (e) {
       print("Error: delete note $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting note: $e')),
+        );
+      }
     }
   }
 
@@ -61,29 +98,25 @@ class _NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Notes",
-          style: TextStyle(
-            color: Colors.blue,
-          ),
-        ),
+        title: const Text("Notes", style: TextStyle(color: Colors.blue)),
         leading: PopupMenuButton<String>(
           itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: "Log out",
-              child: Text("Log out"),
-            ),
+            const PopupMenuItem(value: "Log out", child: Text("Log out")),
           ],
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.blue,
-          ),
+          icon: const Icon(Icons.menu, color: Colors.blue),
+          onSelected: (value) async {
+            if (value == "Log out") {
+              //await _supabaseService.authService.signOut();
+              print("Proba wylogowania");
+              if (mounted) {
+                Navigator.pushReplacementNamed(context, '/login');
+              }
+            }
+          },
         ),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 Expanded(child: NoteList(notes: _notes, onDelete: _deleteNote)),
@@ -100,24 +133,20 @@ class _NotesState extends State<Notes> {
                         ),
                         child: IconButton(
                           onPressed: () => _dialogBuilderNewNote(context),
-                          icon: const Icon(
-                            Icons.add,
-                            size: 40,
-                            color: Colors.white,
-                          ),
+                          icon: const Icon(Icons.add,
+                              size: 40, color: Colors.white),
                         ),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
     );
   }
 
   Future<void> _dialogBuilderNewNote(BuildContext context) {
-    TextEditingController _noteController = TextEditingController();
-
+    final TextEditingController _noteController = TextEditingController();
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -130,18 +159,11 @@ class _NotesState extends State<Notes> {
               children: [
                 const Row(
                   children: [
-                    Text(
-                      "Add new note",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 20,
-                      ),
-                    ),
+                    Text("Add new note",
+                        style: TextStyle(color: Colors.blue, fontSize: 20)),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: TextField(
                     controller: _noteController,
@@ -150,38 +172,33 @@ class _NotesState extends State<Notes> {
                     expands: true,
                     textAlignVertical: TextAlignVertical.top,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter note text..."),
+                      border: OutlineInputBorder(),
+                      hintText: "Enter note text...",
+                    ),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("Cancel",
+                          style: TextStyle(color: Colors.blue)),
                     ),
                     TextButton(
                       onPressed: () async {
                         if (_noteController.text.isNotEmpty) {
                           await _addNote(_noteController.text);
-                          await _fetchNotes();
+                          if (mounted) Navigator.of(context).pop();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Note cannot be empty')),
+                          );
                         }
-                        Navigator.of(context).pop();
                       },
-                      child: const Text(
-                        "Add",
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
+                      child: const Text("Add",
+                          style: TextStyle(color: Colors.blue)),
                     ),
                   ],
                 ),

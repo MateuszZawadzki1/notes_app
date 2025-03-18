@@ -71,7 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            // Pole do wpisania e-maila
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -80,7 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            // Pole do wpisania hasła
             TextField(
               controller: _passwordController,
               obscureText: true,

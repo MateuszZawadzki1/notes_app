@@ -15,22 +15,31 @@ class SupabaseService {
 
   Future<List<Note>> fetchNotes() async {
     final response = await http.get(
-      Uri.parse("$_baseUrl/all_notes"),
+      Uri.parse("$_baseUrl/notes"),
       headers: {
         "Content-Type": "application/json",
         "apikey": _apiKey,
         "Authorization": "Bearer ${authService.accessToken}",
       },
     );
+    print("Fetch status: ${response.statusCode}");
+    print("Fetch body: ${response.body}");
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((note) => Note.fromJson(note)).toList();
+      final dynamic data = jsonDecode(response.body);
+      if (data is List) {
+        return data.map((note) => Note.fromJson(note)).toList();
+      } else {
+        print("Unexpected data format: $data");
+        return [];
+      }
     } else {
+      print("Failed to fetch notes: ${response.statusCode} - ${response.body}");
       return [];
     }
   }
 
   Future<bool> addNote(String text) async {
+    print("Token: ${authService.accessToken}");
     final response = await http.post(
       Uri.parse("$_baseUrl/notes"),
       headers: {
@@ -40,7 +49,7 @@ class SupabaseService {
       },
       body: jsonEncode({"text": text}),
     );
-
+    print("Status: ${response.statusCode}, Body: ${response.body}");
     return response.statusCode == 201;
   }
 
