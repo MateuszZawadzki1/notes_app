@@ -24,5 +24,6 @@ void main() async {
       '/register': (context) => const RegisterScreen(),
       '/notes': (context) => const Notes(),
     },
+    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
   ));
 }

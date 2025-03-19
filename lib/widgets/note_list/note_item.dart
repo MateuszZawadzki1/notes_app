@@ -14,6 +14,11 @@ class NoteItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 5,
+      ),
       child: GestureDetector(
         onTap: () => _dialogBuilder(context),
         onLongPress: () => _dialogBuilderRemove(context),
@@ -23,9 +28,9 @@ class NoteItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Created by: Username",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
                 ),

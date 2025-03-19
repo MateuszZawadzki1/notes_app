@@ -75,16 +75,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text("Register"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const Icon(Icons.person_2_outlined, size: 100),
+            const SizedBox(height: 20),
             const Text(
-              "Create an account",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              "Sign up",
+              style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -123,7 +124,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _register,
-                    child: const Text("Register"),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text(
+                      "Sign up",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
           ],
         ),

@@ -63,13 +63,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Icon(Icons.person_2_outlined, size: 80),
+            const Padding(
+              padding: EdgeInsets.only(top: 75),
+            ),
+            const Icon(Icons.person_2_outlined, size: 100),
             const SizedBox(height: 20),
             const Text(
               "Log in",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -99,10 +102,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _login,
-                    child: const Text("Log in"),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        minimumSize: const Size(double.infinity, 50)),
+                    child: const Text(
+                      "Log in",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
             const SizedBox(
-              height: 10,
+              height: 15,
+            ),
+            const Text("- or -"),
+            const SizedBox(
+              height: 15,
             ),
             TextButton(
                 onPressed: () {
@@ -113,7 +130,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: const Text(
                   "Create an account",
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
                 ))
           ],
         ),

@@ -37,7 +37,7 @@ class _NotesState extends State<Notes> {
       final notes = await _supabaseService.fetchNotes();
       if (mounted) {
         setState(() {
-          _notes = notes ?? []; // Zabezpieczenie przed null
+          _notes = notes ?? [];
           _isLoading = false;
         });
       }
@@ -45,7 +45,7 @@ class _NotesState extends State<Notes> {
       print("Error: fetch notes $e");
       if (mounted) {
         setState(() {
-          _notes = []; // Pusta lista w razie błędu
+          _notes = [];
           _isLoading = false;
         });
       }
@@ -97,11 +97,23 @@ class _NotesState extends State<Notes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 244, 244, 244),
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black,
         title: const Text("Notes", style: TextStyle(color: Colors.blue)),
         leading: PopupMenuButton<String>(
+          color: Colors.white,
           itemBuilder: (context) => [
-            const PopupMenuItem(value: "Log out", child: Text("Log out")),
+            const PopupMenuItem(
+                value: "Log out",
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_outlined),
+                    Text("Log out"),
+                  ],
+                )),
           ],
           icon: const Icon(Icons.menu, color: Colors.blue),
           onSelected: (value) async {
@@ -131,7 +143,6 @@ class _NotesState extends State<Notes> {
           : Column(
               children: [
                 Expanded(child: NoteList(notes: _notes, onDelete: _deleteNote)),
-                Expanded(child: Container()),
                 Padding(
                   padding: const EdgeInsets.only(right: 30, bottom: 30),
                   child: Row(
@@ -170,8 +181,13 @@ class _NotesState extends State<Notes> {
               children: [
                 const Row(
                   children: [
-                    Text("Add new note",
-                        style: TextStyle(color: Colors.blue, fontSize: 20)),
+                    Text(
+                      "Add new note",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
