@@ -29,9 +29,9 @@ class NoteItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Created by: Username",
-                style: TextStyle(
+              Text(
+                "Created by: ${username(note.author!)}",
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
                 ),
@@ -64,7 +64,7 @@ class NoteItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Username",
+                        username(note.author!),
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 24,
@@ -123,4 +123,10 @@ class NoteItem extends StatelessWidget {
 
 String toOneLineText(String text) {
   return text.replaceAll('\n', ' ').trim();
+}
+
+String username(String text) {
+  String username = text.split('@')[0];
+  username = username[0].toUpperCase() + username.substring(1);
+  return username;
 }

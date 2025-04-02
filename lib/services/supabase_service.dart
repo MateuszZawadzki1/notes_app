@@ -15,7 +15,7 @@ class SupabaseService {
 
   Future<List<Note>> fetchNotes() async {
     final response = await http.get(
-      Uri.parse("$_baseUrl/notes"),
+      Uri.parse("$_baseUrl/all_notes"),
       headers: {
         "Content-Type": "application/json",
         "apikey": _apiKey,
