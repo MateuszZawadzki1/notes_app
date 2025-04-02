@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:notes_app/blocs/auth/auth_bloc.dart';
+import 'package:notes_app/blocs/auth/auth_event.dart';
+import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/models/note.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/services/supabase_service.dart';
 import 'package:notes_app/widgets/note_list/note_list.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Notes extends StatefulWidget {
   const Notes({super.key});
@@ -15,26 +21,33 @@ class _NotesState extends State<Notes> {
   final SupabaseService _supabaseService = SupabaseService(AuthService());
   List<Note> _notes = [];
   bool _isLoading = true;
+  bool _isLoggingOut = false;
 
   @override
   void initState() {
     super.initState();
-    _checkSession();
+    Future.delayed(Duration.zero, () {
+      print("AuthBloc w Notes: ${context.read<AuthBloc>()}");
+    });
+    //_checkSession();
   }
 
-  Future<void> _checkSession() async {
-    if (_supabaseService.authService.accessToken == null) {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
-    } else {
-      _fetchNotes();
-    }
-  }
+  // Future<void> _checkSession() async {
+  //   if (_supabaseService.authService.accessToken == null) {
+  //     if (mounted) {
+  //       Navigator.pushReplacementNamed(context, '/login');
+  //     }
+  //   } else {
+  //     _fetchNotes();
+  //   }
+  // }
 
   Future<void> _fetchNotes() async {
+    print("_fetchNotes() zostało wywołane");
+
     try {
       final notes = await _supabaseService.fetchNotes();
+      print("Pobrane notatki: $notes");
       if (mounted) {
         setState(() {
           _notes = notes ?? [];
@@ -107,63 +120,86 @@ class _NotesState extends State<Notes> {
           color: Colors.white,
           itemBuilder: (context) => [
             const PopupMenuItem(
-                value: "Log out",
-                child: Row(
-                  children: [
-                    Icon(Icons.logout_outlined),
-                    Text("Log out"),
-                  ],
-                )),
+              value: "Log out",
+              child: Row(
+                children: [
+                  Icon(Icons.logout_outlined),
+                  Text("Log out"),
+                ],
+              ),
+            ),
           ],
           icon: const Icon(Icons.menu, color: Colors.blue),
           onSelected: (value) async {
             if (value == "Log out") {
-              try {
-                await _supabaseService.authService.signOut();
-                if (mounted) {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/login',
-                    (route) => false,
-                  );
-                }
-              } catch (e) {
-                print("Logout error: $e");
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Error logging out: $e")));
-                }
+              if (!_isLoggingOut) {
+                _isLoggingOut = true;
+                context.read<AuthBloc>().add(AuthLogutRequested());
               }
+              print("AuthBlock: ${context.read<AuthBloc>()}");
             }
           },
         ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Expanded(child: NoteList(notes: _notes, onDelete: _deleteNote)),
-                Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.blue,
-                          shape: CircleBorder(),
+      body: BlocListener<AuthBloc, AuthState>(
+        // listenWhen: (previous, current) {
+        //   return current is AuthUnauthenticated &&
+        //       previous is! AuthUnauthenticated;
+        // },
+        listener: (context, state) {
+          log('message');
+          if (state is AuthUnauthenticated) {
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed(
+                '/login',
+                //(route) => false,
+              );
+            }
+          }
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              if (_isLoading) {
+                _fetchNotes();
+              }
+              return _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      children: [
+                        Expanded(
+                            child:
+                                NoteList(notes: _notes, onDelete: _deleteNote)),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, bottom: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.blue,
+                                  shape: CircleBorder(),
+                                ),
+                                child: IconButton(
+                                  onPressed: () =>
+                                      _dialogBuilderNewNote(context),
+                                  icon: const Icon(Icons.add,
+                                      size: 40, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: IconButton(
-                          onPressed: () => _dialogBuilderNewNote(context),
-                          icon: const Icon(Icons.add,
-                              size: 40, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                      ],
+                    );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 
