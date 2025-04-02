@@ -15,11 +15,12 @@ class NoteItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 15,
         vertical: 5,
       ),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () => _dialogBuilder(context),
         onLongPress: () => _dialogBuilderRemove(context),
         child: Container(
@@ -39,7 +40,7 @@ class NoteItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                "${note.text!.substring(0, note.text!.length < 100 ? note.text!.length : 100)}...", // Change it
+                "${note.text!.replaceAll('\n', ' ').substring(0, note.text!.length < 100 ? note.text!.length : 100).trim()}...",
                 textAlign: TextAlign.left,
               ),
             ],
@@ -118,4 +119,8 @@ class NoteItem extends StatelessWidget {
           );
         });
   }
+}
+
+String toOneLineText(String text) {
+  return text.replaceAll('\n', ' ').trim();
 }
