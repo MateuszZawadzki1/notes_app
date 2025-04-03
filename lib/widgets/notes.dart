@@ -26,8 +26,9 @@ class _NotesState extends State<Notes> {
   @override
   void initState() {
     super.initState();
+    _fetchNotes();
     Future.delayed(Duration.zero, () {
-      print("AuthBloc w Notes: ${context.read<AuthBloc>()}");
+      log("AuthBloc w Notes: ${context.read<AuthBloc>()}");
     });
     //_checkSession();
   }
@@ -43,11 +44,11 @@ class _NotesState extends State<Notes> {
   // }
 
   Future<void> _fetchNotes() async {
-    print("_fetchNotes() zostało wywołane");
+    log("_fetchNotes() zostało wywołane");
 
     try {
       final notes = await _supabaseService.fetchNotes();
-      print("Pobrane notatki: $notes");
+      log("Pobrane notatki: $notes");
       if (mounted) {
         setState(() {
           _notes = notes ?? [];
@@ -55,7 +56,7 @@ class _NotesState extends State<Notes> {
         });
       }
     } catch (e) {
-      print("Error: fetch notes $e");
+      log("Error: fetch notes $e");
       if (mounted) {
         setState(() {
           _notes = [];
@@ -160,9 +161,7 @@ class _NotesState extends State<Notes> {
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {
-              if (_isLoading) {
-                _fetchNotes();
-              }
+              log("Stan auth");
               return _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Column(

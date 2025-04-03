@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
+import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/widgets/login_screen.dart';
@@ -14,22 +15,31 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcXhjb3N6a3NjaHFkbnJyaWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA3NTM1NjUsImV4cCI6MjA0NjMyOTU2NX0.z644HIZnUFUOVQEkNiO0o_ctmWUdEgkwtgiAT_ocYuE',
   );
-  runApp(const MyApp());
+
+  final authBloc = AuthBloc(authService: AuthService());
+  authBloc.add(AuthCheckStatus());
+
+  final initialRoute = Supabase.instance.client.auth.currentSession != null
+      ? '/notes'
+      : '/login';
+  runApp(MyApp(initialRoute: initialRoute, authBloc: authBloc));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AuthBloc authBloc;
+  final String initialRoute;
+  const MyApp({super.key, required this.initialRoute, required this.authBloc});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(authService: AuthService()),
+        BlocProvider<AuthBloc>.value(
+          value: authBloc,
         ),
       ],
       child: MaterialApp(
-        initialRoute: '/login',
+        initialRoute: initialRoute,
         routes: {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
