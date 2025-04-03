@@ -23,8 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
-    //context.read<AuthBloc>().add(AuthCheckStatus());
   }
 
   void _login() {
