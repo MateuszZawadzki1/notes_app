@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
+import 'package:notes_app/cubit/notes_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/widgets/login_screen.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
-          '/notes': (context) => const Notes(),
+          '/notes': (context) => Notes(),
         },
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       ),
