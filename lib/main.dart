@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,11 +10,12 @@ import 'package:notes_app/widgets/notes.dart';
 import 'package:notes_app/widgets/register_screen.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
+
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://rjqxcoszkschqdnrriio.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcXhjb3N6a3NjaHFkbnJyaWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA3NTM1NjUsImV4cCI6MjA0NjMyOTU2NX0.z644HIZnUFUOVQEkNiO0o_ctmWUdEgkwtgiAT_ocYuE',
+    url: dotenv.get("SUPABASE_URL"),
+    anonKey: dotenv.get("API_KEY"),
   );
 
   final authBloc = AuthBloc(authService: AuthService());

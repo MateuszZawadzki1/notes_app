@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:notes_app/models/note.dart';
 import 'package:notes_app/services/auth_service.dart';
 
 class SupabaseService {
-  final String _baseUrl = "https://rjqxcoszkschqdnrriio.supabase.co/rest/v1";
-  final String _apiKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcXhjb3N6a3NjaHFkbnJyaWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA3NTM1NjUsImV4cCI6MjA0NjMyOTU2NX0.z644HIZnUFUOVQEkNiO0o_ctmWUdEgkwtgiAT_ocYuE";
+  final String _baseUrl = "${dotenv.get("SUPABASE_URL")}/rest/v1";
+  final String _apiKey = dotenv.get("API_KEY");
 
   final AuthService authService;
 
