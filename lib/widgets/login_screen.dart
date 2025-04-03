@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AuthAuthenticated) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const Notes()),
+            MaterialPageRoute(builder: (context) => Notes()),
           );
         }
       },
