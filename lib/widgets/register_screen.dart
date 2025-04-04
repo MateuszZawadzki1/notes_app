@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (state is AuthAuthenticated) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const Notes()),
+              MaterialPageRoute(builder: (context) => Notes()),
             );
           }
         }, builder: (context, state) {

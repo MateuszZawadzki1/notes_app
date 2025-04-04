@@ -72,11 +72,19 @@ class NotesScreen extends StatelessWidget {
               return Column(
                 children: [
                   Expanded(
-                      child: NoteList(
-                          notes: state.notes,
-                          onDelete: (id) => context
-                              .read<NotesCubit>()
-                              .deleteNote(id.toString()))),
+                    child: NoteList(
+                      notes: state.notes,
+                      onDelete: (id) =>
+                          context.read<NotesCubit>().deleteNote(id.toString()),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed('/test_retrofit');
+                    },
+                    child: Text("TEST Retrofit"),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30, bottom: 30),
                     child: Row(
