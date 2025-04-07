@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/cubit/notes_cubit.dart';
-import 'package:notes_app/widgets/test_retrofit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/widgets/login_screen.dart';
@@ -48,7 +47,6 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
           '/notes': (context) => Notes(),
-          '/test_retrofit': (context) => TestRetrofit(),
         },
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       ),

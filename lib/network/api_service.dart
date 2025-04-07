@@ -10,4 +10,10 @@ abstract class ApiService {
 
   @GET('/all_notes')
   Future<List<Note>> getNotes();
+
+  @POST('/notes')
+  Future<void> addNote(@Body() Map<String, String> text);
+
+  @DELETE('/notes')
+  Future<void> deleteNote(@Query('id') String query);
 }

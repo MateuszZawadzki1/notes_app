@@ -1,19 +1,21 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:notes_app/models/note.dart';
-import 'package:notes_app/services/supabase_service.dart';
+import 'package:notes_app/repositories/note_repository.dart';
 
 part 'notes_state.dart';
 
 class NotesCubit extends Cubit<NotesState> {
-  final SupabaseService supabaseService;
-
-  NotesCubit(this.supabaseService) : super(NotesInitial());
+  //final SupabaseService supabaseService;
+  final NoteRepository noteRepository;
+  NotesCubit(this.noteRepository) : super(NotesInitial());
 
   Future<void> fetchNotes() async {
     emit(NotesLoading());
     try {
-      final notes = await supabaseService.fetchNotes();
+      final notes = await noteRepository.getAllNotes();
       emit(NotesLoaded(notes: notes));
     } catch (e) {
       emit(NotesError(message: "Failed to load notes: $e"));
@@ -21,26 +23,22 @@ class NotesCubit extends Cubit<NotesState> {
   }
 
   Future<void> addNote(String text) async {
+    emit(NotesLoading());
     try {
-      final success = await supabaseService.addNote(text);
-      if (success) {
-        fetchNotes();
-      } else {
-        emit(const NotesError(message: "Failed to add note"));
-      }
+      await noteRepository.addNote(text);
+      final notes = await noteRepository.getAllNotes();
+      emit(NotesLoaded(notes: notes));
     } catch (e) {
       emit(NotesError(message: "Error adding note $e"));
     }
   }
 
-  Future<void> deleteNote(String noteId) async {
+  Future<void> deleteNote(int noteId) async {
+    emit(NotesLoading());
     try {
-      final success = await supabaseService.deleteNote(noteId);
-      if (success) {
-        fetchNotes();
-      } else {
-        emit(const NotesError(message: "Failed to delete note"));
-      }
+      await noteRepository.deleteNote(noteId);
+      final notes = await noteRepository.getAllNotes();
+      emit(NotesLoaded(notes: notes));
     } catch (e) {
       emit(NotesError(message: "Error delete note $e"));
     }

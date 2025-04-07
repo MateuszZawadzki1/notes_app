@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:notes_app/models/note.dart';
 import 'package:notes_app/network/api_service.dart';
@@ -16,6 +19,23 @@ class NoteRepository {
       return await _apiService.getNotes();
     } catch (e) {
       throw Exception("Blad pobierania notatek");
+    }
+  }
+
+  Future<void> addNote(String text) async {
+    try {
+      final Map<String, String> noteData = {"text": text};
+      await _apiService.addNote(noteData);
+    } catch (e) {
+      throw Exception("Blad dodania notatki");
+    }
+  }
+
+  Future<void> deleteNote(int noteId) async {
+    try {
+      await _apiService.deleteNote('eq.$noteId');
+    } catch (e) {
+      throw Exception("Blad usuwania notatki: $e");
     }
   }
 }

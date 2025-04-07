@@ -5,9 +5,7 @@ import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/cubit/notes_cubit.dart';
-import 'package:notes_app/models/note.dart';
-import 'package:notes_app/services/auth_service.dart';
-import 'package:notes_app/services/supabase_service.dart';
+import 'package:notes_app/repositories/note_repository.dart';
 import 'package:notes_app/widgets/note_list/note_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,8 +13,7 @@ class Notes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          NotesCubit(SupabaseService(AuthService()))..fetchNotes(),
+      create: (context) => NotesCubit(NoteRepository())..fetchNotes(),
       child: NotesScreen(),
     );
   }
@@ -75,15 +72,8 @@ class NotesScreen extends StatelessWidget {
                     child: NoteList(
                       notes: state.notes,
                       onDelete: (id) =>
-                          context.read<NotesCubit>().deleteNote(id.toString()),
+                          context.read<NotesCubit>().deleteNote(id),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed('/test_retrofit');
-                    },
-                    child: Text("TEST Retrofit"),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30, bottom: 30),
@@ -120,7 +110,7 @@ class NotesScreen extends StatelessWidget {
     final TextEditingController _noteController = TextEditingController();
     return showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return Dialog(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.95,
