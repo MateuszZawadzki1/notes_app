@@ -10,7 +10,6 @@ part 'notes_state.dart';
 
 @injectable
 class NotesCubit extends Cubit<NotesState> {
-  //final SupabaseService supabaseService;
   final NoteRepository noteRepository;
   NotesCubit(this.noteRepository) : super(NotesInitial());
 

@@ -4,6 +4,7 @@ import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/widgets/notes.dart';
+import 'package:notes_app/l10n_extension.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -51,8 +52,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const Icon(Icons.person_2_outlined, size: 100),
                 const SizedBox(height: 20),
-                const Text(
-                  "Sign up",
+                Text(
+                  context.l10n.signUp,
                   style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
@@ -67,9 +68,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Password",
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: context.l10n.password,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -96,8 +97,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           minimumSize: const Size(double.infinity, 50),
                           backgroundColor: Colors.blue,
                         ),
-                        child: const Text(
-                          "Sign up",
+                        child: Text(
+                          context.l10n.signUp,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,

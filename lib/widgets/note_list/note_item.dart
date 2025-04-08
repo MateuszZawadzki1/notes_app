@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/models/note.dart';
+import 'package:notes_app/widgets/notes.dart';
+import 'package:notes_app/l10n_extension.dart';
 
 class NoteItem extends StatelessWidget {
   const NoteItem({
@@ -30,7 +32,7 @@ class NoteItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Created by: ${username(note.author!)}",
+                "${context.l10n.createdby} ${username(note.author!)}",
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,

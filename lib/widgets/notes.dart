@@ -9,6 +9,8 @@ import 'package:notes_app/di.dart';
 import 'package:notes_app/repositories/note_repository.dart';
 import 'package:notes_app/widgets/note_list/note_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:notes_app/l10n_extension.dart';
 
 class Notes extends StatelessWidget {
   @override
@@ -36,16 +38,17 @@ class NotesScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 2,
         shadowColor: Colors.black,
-        title: const Text("Notes", style: TextStyle(color: Colors.blue)),
+        title: Text(context.l10n.notes,
+            style: const TextStyle(color: Colors.blue)),
         leading: PopupMenuButton<String>(
           color: Colors.white,
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: "Log out",
               child: Row(
                 children: [
-                  Icon(Icons.logout_outlined),
-                  Text("Log out"),
+                  const Icon(Icons.logout_outlined),
+                  Text(context.l10n.logout),
                 ],
               ),
             ),
@@ -126,11 +129,11 @@ class NotesScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Row(
+                Row(
                   children: [
                     Text(
-                      "Add new note",
-                      style: TextStyle(
+                      context.l10n.addNote,
+                      style: const TextStyle(
                         color: Colors.blue,
                         fontSize: 20,
                       ),
@@ -145,9 +148,9 @@ class NotesScreen extends StatelessWidget {
                     minLines: null,
                     expands: true,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Enter note text...",
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintText: context.l10n.enterNote,
                     ),
                   ),
                 ),
@@ -156,8 +159,8 @@ class NotesScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(),
-                      child: const Text("Cancel",
-                          style: TextStyle(color: Colors.blue)),
+                      child: Text(context.l10n.cancel,
+                          style: const TextStyle(color: Colors.blue)),
                     ),
                     TextButton(
                       onPressed: () {
@@ -173,7 +176,7 @@ class NotesScreen extends StatelessWidget {
                           );
                         }
                       },
-                      child: const Text("Add",
+                      child: Text(context.l10n.add,
                           style: TextStyle(color: Colors.blue)),
                     ),
                   ],

@@ -4,8 +4,10 @@ import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/services/auth_service.dart';
+import 'package:notes_app/widgets/note_list/note_item.dart';
 import 'package:notes_app/widgets/notes.dart';
 import 'package:notes_app/widgets/register_screen.dart';
+import 'package:notes_app/l10n_extension.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,9 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const Icon(Icons.person_2_outlined, size: 100),
               const SizedBox(height: 20),
-              const Text(
-                "Log in",
-                style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+              Text(
+                context.l10n.logIn,
+                style:
+                    const TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -73,9 +76,9 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Password",
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: context.l10n.password,
                 ),
               ),
               const SizedBox(height: 10),
@@ -92,9 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           minimumSize: const Size(double.infinity, 50)),
-                      child: const Text(
-                        "Log in",
-                        style: TextStyle(
+                      child: Text(
+                        context.l10n.logIn,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
@@ -104,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 15,
               ),
-              const Text("- or -"),
+              Text(context.l10n.or),
               const SizedBox(
                 height: 15,
               ),
@@ -115,9 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(
                             builder: (context) => const RegisterScreen()));
                   },
-                  child: const Text(
-                    "Create an account",
-                    style: TextStyle(
+                  child: Text(
+                    context.l10n.createAnAccout,
+                    style: const TextStyle(
                         color: Colors.black,
                         decoration: TextDecoration.underline,
                         fontSize: 16,
