@@ -5,6 +5,7 @@ import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/cubit/notes_cubit.dart';
+import 'package:notes_app/di.dart';
 import 'package:notes_app/repositories/note_repository.dart';
 import 'package:notes_app/widgets/note_list/note_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +13,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class Notes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NotesCubit(NoteRepository())..fetchNotes(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<NotesCubit>()..fetchNotes(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<AuthBloc>()..add(AuthCheckStatus()),
+        ),
+      ],
       child: NotesScreen(),
     );
   }
@@ -113,8 +121,8 @@ class NotesScreen extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return Dialog(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            height: MediaQuery.of(context).size.height * 0.8,
+            width: MediaQuery.of(dialogContext).size.width * 0.95,
+            height: MediaQuery.of(dialogContext).size.height * 0.8,
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
@@ -147,19 +155,19 @@ class NotesScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(dialogContext).pop(),
                       child: const Text("Cancel",
                           style: TextStyle(color: Colors.blue)),
                     ),
                     TextButton(
                       onPressed: () {
                         if (_noteController.text.isNotEmpty) {
-                          context
+                          dialogContext
                               .read<NotesCubit>()
                               .addNote(_noteController.text);
-                          Navigator.of(context).pop();
+                          Navigator.of(dialogContext).pop();
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
                             const SnackBar(
                                 content: Text('Note cannot be empty')),
                           );

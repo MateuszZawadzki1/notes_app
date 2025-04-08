@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
-import 'package:notes_app/cubit/notes_cubit.dart';
+import 'package:notes_app/di.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notes_app/services/auth_service.dart';
 import 'package:notes_app/widgets/login_screen.dart';
@@ -19,7 +19,9 @@ void main() async {
     anonKey: dotenv.get("API_KEY"),
   );
 
-  final authBloc = AuthBloc(authService: AuthService());
+  await configureDependecies();
+
+  final authBloc = getIt<AuthBloc>();
   authBloc.add(AuthCheckStatus());
 
   final initialRoute = Supabase.instance.client.auth.currentSession != null

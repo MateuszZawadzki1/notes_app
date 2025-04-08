@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart' as authS;
 import 'package:notes_app/services/auth_service.dart';
 
+@injectable
 class AuthBloc extends Bloc<AuthEvent, authS.AuthState> {
   final AuthService authService;
 
