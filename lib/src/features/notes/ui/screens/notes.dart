@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes_app/blocs/auth/auth_bloc.dart';
-import 'package:notes_app/blocs/auth/auth_event.dart';
-import 'package:notes_app/blocs/auth/auth_state.dart';
-import 'package:notes_app/cubit/notes_cubit.dart';
-import 'package:notes_app/di.dart';
-import 'package:notes_app/l10n_extension.dart';
-import 'package:notes_app/widgets/note_list/note_list.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_state.dart';
+import 'package:notes_app/src/features/notes/cubit/notes_cubit.dart';
+import 'package:notes_app/src/core/di/di.dart';
+import 'package:notes_app/l10n/l10n_extension.dart';
+import 'package:notes_app/src/features/notes/ui/widgets/note_list.dart';
 
 class Notes extends StatelessWidget {
   const Notes({super.key});

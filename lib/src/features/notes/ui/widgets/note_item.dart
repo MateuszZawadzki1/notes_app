@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/l10n_extension.dart';
-import 'package:notes_app/models/note.dart';
+import 'package:notes_app/l10n/l10n_extension.dart';
+import 'package:notes_app/src/features/notes/data/models/note.dart';
 
 class NoteItem extends StatelessWidget {
   const NoteItem({

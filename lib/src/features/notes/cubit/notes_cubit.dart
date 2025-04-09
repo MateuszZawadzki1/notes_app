@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import 'package:notes_app/models/note.dart';
-import 'package:notes_app/repositories/note_repository.dart';
+import 'package:notes_app/src/features/notes/data/models/note.dart';
+import 'package:notes_app/src/features/notes/data/repositories/note_repository.dart';
 
 part 'notes_state.dart';
 

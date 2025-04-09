@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:notes_app/blocs/auth/auth_event.dart';
-import 'package:notes_app/blocs/auth/auth_state.dart' as auth_s;
-import 'package:notes_app/services/auth_service.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_state.dart' as auth_s;
+import 'package:notes_app/src/features/auth/data/repositories/auth_service.dart';
 
 @injectable
 class AuthBloc extends Bloc<AuthEvent, auth_s.AuthState> {

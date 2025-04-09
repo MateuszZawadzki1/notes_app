@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
-import 'package:notes_app/models/note.dart';
-import 'package:notes_app/network/api_service.dart';
+import 'package:notes_app/src/features/notes/data/models/note.dart';
+import 'package:notes_app/src/core/services/api_service.dart';
 
 @injectable
 class NoteRepository {

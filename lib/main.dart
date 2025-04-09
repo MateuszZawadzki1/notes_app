@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:notes_app/blocs/auth/auth_bloc.dart';
-import 'package:notes_app/blocs/auth/auth_event.dart';
-import 'package:notes_app/di.dart';
-import 'package:notes_app/widgets/login_screen.dart';
-import 'package:notes_app/widgets/notes.dart';
-import 'package:notes_app/widgets/register_screen.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
+import 'package:notes_app/src/core/di/di.dart';
+import 'package:notes_app/src/features/auth/ui/screens/login_screen.dart';
+import 'package:notes_app/src/features/notes/ui/screens/notes.dart';
+import 'package:notes_app/src/features/auth/ui/screens/register_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {

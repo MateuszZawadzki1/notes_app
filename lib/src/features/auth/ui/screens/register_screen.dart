@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes_app/blocs/auth/auth_bloc.dart';
-import 'package:notes_app/blocs/auth/auth_event.dart';
-import 'package:notes_app/blocs/auth/auth_state.dart';
-import 'package:notes_app/l10n_extension.dart';
-import 'package:notes_app/widgets/notes.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
+import 'package:notes_app/src/features/auth/bloc/auth_state.dart';
+import 'package:notes_app/l10n/l10n_extension.dart';
+import 'package:notes_app/src/features/notes/ui/screens/notes.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
