@@ -4,13 +4,13 @@ import 'package:notes_app/widgets/note_list/note_item.dart';
 
 class NoteList extends StatelessWidget {
   const NoteList({
-    super.key,
     required this.notes,
     required this.onDelete,
+    super.key,
   });
 
   final List<Note> notes;
-  final Function(int) onDelete;
+  final Future<void> Function(int) onDelete;
 
   @override
   Widget build(BuildContext context) {

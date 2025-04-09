@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/models/note.dart';
-import 'package:notes_app/widgets/notes.dart';
 import 'package:notes_app/l10n_extension.dart';
+import 'package:notes_app/models/note.dart';
 
 class NoteItem extends StatelessWidget {
   const NoteItem({
-    super.key,
     required this.note,
     required this.onDelete,
+    super.key,
   });
 
   final Note note;
-  final Function(int) onDelete;
+  final Future<void> Function(int) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class NoteItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${context.l10n.createdby} ${username(note.author!)}",
+                '${context.l10n.createdby} ${username(note.author!)}',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
@@ -42,7 +41,10 @@ class NoteItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                "${note.text!.replaceAll('\n', ' ').substring(0, note.text!.length < 100 ? note.text!.length : 100).trim()}...",
+                "${note.text.replaceAll('\n', ' ').substring(
+                      0,
+                      note.text.length < 100 ? note.text.length : 100,
+                    ).trim()}...",
                 textAlign: TextAlign.left,
               ),
             ],
@@ -81,13 +83,13 @@ class NoteItem extends StatelessWidget {
                           Icons.close,
                           color: Colors.blue,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  Text(note.text!), // Change it
+                  Text(note.text),
                 ],
               ),
             ),
@@ -99,27 +101,29 @@ class NoteItem extends StatelessWidget {
 
   Future<void> _dialogBuilderRemove(BuildContext context) {
     return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Please confirm"),
-            content: const Text("Are you sure you want to remove this note?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("No"),
-              ),
-              TextButton(
-                  onPressed: () {
-                    onDelete(note.id!);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Yes"))
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please confirm'),
+          content: const Text('Are you sure you want to remove this note?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDelete(note.id!);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -128,7 +132,5 @@ String toOneLineText(String text) {
 }
 
 String username(String text) {
-  String username = text.split('@')[0];
-  username = username[0].toUpperCase() + username.substring(1);
-  return username;
+  return text.split('@')[0][0].toUpperCase() + text.split('@')[0].substring(1);
 }

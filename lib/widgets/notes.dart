@@ -1,18 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_bloc.dart';
 import 'package:notes_app/blocs/auth/auth_event.dart';
 import 'package:notes_app/blocs/auth/auth_state.dart';
 import 'package:notes_app/cubit/notes_cubit.dart';
 import 'package:notes_app/di.dart';
-import 'package:notes_app/repositories/note_repository.dart';
-import 'package:notes_app/widgets/note_list/note_list.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:notes_app/l10n_extension.dart';
+import 'package:notes_app/widgets/note_list/note_list.dart';
 
 class Notes extends StatelessWidget {
+  const Notes({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -24,12 +24,14 @@ class Notes extends StatelessWidget {
           create: (context) => getIt<AuthBloc>()..add(AuthCheckStatus()),
         ),
       ],
-      child: NotesScreen(),
+      child: const NotesScreen(),
     );
   }
 }
 
 class NotesScreen extends StatelessWidget {
+  const NotesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +40,15 @@ class NotesScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 2,
         shadowColor: Colors.black,
-        title: Text(context.l10n.notes,
-            style: const TextStyle(color: Colors.blue)),
+        title: Text(
+          context.l10n.notes,
+          style: const TextStyle(color: Colors.blue),
+        ),
         leading: PopupMenuButton<String>(
           color: Colors.white,
           itemBuilder: (context) => [
             PopupMenuItem(
-              value: "Log out",
+              value: 'Log out',
               child: Row(
                 children: [
                   const Icon(Icons.logout_outlined),
@@ -55,7 +59,7 @@ class NotesScreen extends StatelessWidget {
           ],
           icon: const Icon(Icons.menu, color: Colors.blue),
           onSelected: (value) async {
-            if (value == "Log out") {
+            if (value == 'Log out') {
               context.read<AuthBloc>().add(AuthLogutRequested());
             }
           },
@@ -98,8 +102,11 @@ class NotesScreen extends StatelessWidget {
                           ),
                           child: IconButton(
                             onPressed: () => _dialogBuilderNewNote(context),
-                            icon: const Icon(Icons.add,
-                                size: 40, color: Colors.white),
+                            icon: const Icon(
+                              Icons.add,
+                              size: 40,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -118,7 +125,7 @@ class NotesScreen extends StatelessWidget {
   }
 
   Future<void> _dialogBuilderNewNote(BuildContext context) {
-    final TextEditingController _noteController = TextEditingController();
+    final noteController = TextEditingController();
     return showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -143,9 +150,8 @@ class NotesScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 Expanded(
                   child: TextField(
-                    controller: _noteController,
+                    controller: noteController,
                     maxLines: null,
-                    minLines: null,
                     expands: true,
                     textAlignVertical: TextAlignVertical.top,
                     decoration: InputDecoration(
@@ -159,25 +165,30 @@ class NotesScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(),
-                      child: Text(context.l10n.cancel,
-                          style: const TextStyle(color: Colors.blue)),
+                      child: Text(
+                        context.l10n.cancel,
+                        style: const TextStyle(color: Colors.blue),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
-                        if (_noteController.text.isNotEmpty) {
+                        if (noteController.text.isNotEmpty) {
                           context
                               .read<NotesCubit>()
-                              .addNote(_noteController.text);
+                              .addNote(noteController.text);
                           Navigator.of(dialogContext).pop();
                         } else {
                           ScaffoldMessenger.of(dialogContext).showSnackBar(
                             const SnackBar(
-                                content: Text('Note cannot be empty')),
+                              content: Text('Note cannot be empty'),
+                            ),
                           );
                         }
                       },
-                      child: Text(context.l10n.add,
-                          style: TextStyle(color: Colors.blue)),
+                      child: Text(
+                        context.l10n.add,
+                        style: const TextStyle(color: Colors.blue),
+                      ),
                     ),
                   ],
                 ),

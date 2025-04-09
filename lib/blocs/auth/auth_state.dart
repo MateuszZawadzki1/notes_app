@@ -14,8 +14,8 @@ class AuthAuthenticated extends AuthState {}
 class AuthUnauthenticated extends AuthState {}
 
 class AuthFailure extends AuthState {
-  final String message;
   AuthFailure(this.message);
+  final String message;
 
   @override
   List<Object?> get props => [message];

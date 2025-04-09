@@ -53,6 +53,6 @@ extension GetItInjectableX on _i174.GetIt {
   }
 }
 
-class _$dioModule extends _i129.dioModule {}
+class _$dioModule extends _i129.DioModule {}
 
 class _$AppModule extends _i354.AppModule {}

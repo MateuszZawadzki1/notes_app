@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -10,8 +8,8 @@ part 'notes_state.dart';
 
 @injectable
 class NotesCubit extends Cubit<NotesState> {
-  final NoteRepository noteRepository;
   NotesCubit(this.noteRepository) : super(NotesInitial());
+  final NoteRepository noteRepository;
 
   Future<void> fetchNotes() async {
     emit(NotesLoading());
@@ -35,6 +33,8 @@ class NotesCubit extends Cubit<NotesState> {
     emit(NotesLoading());
     final result = await noteRepository.deleteNote(noteId);
     result.fold(
-        (error) => emit(NotesError(message: error)), (_) => fetchNotes());
+      (error) => emit(NotesError(message: error)),
+      (_) => fetchNotes(),
+    );
   }
 }

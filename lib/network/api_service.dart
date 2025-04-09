@@ -1,9 +1,7 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:injectable/injectable.dart';
-import 'package:notes_app/network/dio_client.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:notes_app/models/note.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'api_service.g.dart';
 
@@ -11,7 +9,7 @@ part 'api_service.g.dart';
 @injectable
 abstract class ApiService {
   @factoryMethod
-  factory ApiService(Dio dio, {@Named("baseUrl") String? baseUrl}) {
+  factory ApiService(Dio dio, {@Named('baseUrl') String? baseUrl}) {
     return _ApiService(dio, baseUrl: baseUrl);
   }
 
