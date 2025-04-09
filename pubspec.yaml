@@ -29,6 +29,8 @@ dependencies:
     sdk: flutter
   intl: any
   flutter_gen_runner: ^5.10.0
+  either_dart: ^1.0.0
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:

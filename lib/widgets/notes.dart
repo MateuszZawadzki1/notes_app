@@ -165,7 +165,7 @@ class NotesScreen extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         if (_noteController.text.isNotEmpty) {
-                          dialogContext
+                          context
                               .read<NotesCubit>()
                               .addNote(_noteController.text);
                           Navigator.of(dialogContext).pop();

@@ -15,33 +15,26 @@ class NotesCubit extends Cubit<NotesState> {
 
   Future<void> fetchNotes() async {
     emit(NotesLoading());
-    try {
-      final notes = await noteRepository.getAllNotes();
-      emit(NotesLoaded(notes: notes));
-    } catch (e) {
-      emit(NotesError(message: "Failed to load notes: $e"));
-    }
+    final notes = await noteRepository.getAllNotes();
+    notes.fold(
+      (error) => emit(NotesError(message: error)),
+      (result) => emit(NotesLoaded(notes: result)),
+    );
   }
 
   Future<void> addNote(String text) async {
     emit(NotesLoading());
-    try {
-      await noteRepository.addNote(text);
-      final notes = await noteRepository.getAllNotes();
-      emit(NotesLoaded(notes: notes));
-    } catch (e) {
-      emit(NotesError(message: "Error adding note $e"));
-    }
+    final result = await noteRepository.addNote(text);
+    result.fold(
+      (error) => emit(NotesError(message: error)),
+      (_) => fetchNotes(),
+    );
   }
 
   Future<void> deleteNote(int noteId) async {
     emit(NotesLoading());
-    try {
-      await noteRepository.deleteNote(noteId);
-      final notes = await noteRepository.getAllNotes();
-      emit(NotesLoaded(notes: notes));
-    } catch (e) {
-      emit(NotesError(message: "Error delete note $e"));
-    }
+    final result = await noteRepository.deleteNote(noteId);
+    result.fold(
+        (error) => emit(NotesError(message: error)), (_) => fetchNotes());
   }
 }

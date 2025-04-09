@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart' as dartz;
+import 'package:either_dart/either.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
 import 'package:notes_app/models/note.dart';
@@ -10,28 +12,31 @@ class NoteRepository {
 
   NoteRepository(this._apiService);
 
-  Future<List<Note>> getAllNotes() async {
+  Future<Either<String, List<Note>>> getAllNotes() async {
     try {
-      return await _apiService.getNotes();
+      final notes = await _apiService.getNotes();
+      return Right(notes);
     } catch (e) {
-      throw Exception("Blad pobierania notatek");
+      return const Left("Blad pobierania notatek");
     }
   }
 
-  Future<void> addNote(String text) async {
+  Future<Either<String, dartz.Unit>> addNote(String text) async {
     try {
       final Map<String, String> noteData = {"text": text};
       await _apiService.addNote(noteData);
+      return const Right(dartz.unit);
     } catch (e) {
-      throw Exception("Blad dodania notatki");
+      return Left("Blad z dodaniem notatki: $e");
     }
   }
 
-  Future<void> deleteNote(int noteId) async {
+  Future<Either<String, dartz.Unit>> deleteNote(int noteId) async {
     try {
       await _apiService.deleteNote('eq.$noteId');
+      return const Right(dartz.unit);
     } catch (e) {
-      throw Exception("Blad usuwania notatki: $e");
+      return Left("Blad z usunieciem notatki $e");
     }
   }
 }
