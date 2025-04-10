@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_app/l10n/l10n_extension.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_state.dart';
-import 'package:notes_app/l10n/l10n_extension.dart';
 import 'package:notes_app/src/features/auth/data/repositories/auth_service.dart';
-import 'package:notes_app/src/features/notes/ui/screens/notes.dart';
 import 'package:notes_app/src/features/auth/ui/screens/register_screen.dart';
+import 'package:notes_app/src/features/notes/ui/screens/notes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
