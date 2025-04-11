@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:notes_app/main.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_state.dart';
@@ -41,10 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<Notes>(builder: (context) => const Notes()),
-            );
+            context.go('/notes');
           }
         },
         builder: (context, state) {

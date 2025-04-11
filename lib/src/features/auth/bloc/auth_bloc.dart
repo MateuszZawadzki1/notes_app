@@ -13,7 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, auth_s.AuthState> {
     on<AuthCheckStatus>(_onAuthCheckStatus);
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthRegisterRequested>(_onAuthRegisterRequested);
-    on<AuthLogutRequested>(_onAuthLogoutRequested);
+    on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
   final AuthService authService;
 
@@ -69,15 +69,15 @@ class AuthBloc extends Bloc<AuthEvent, auth_s.AuthState> {
   }
 
   Future<void> _onAuthLogoutRequested(
-    AuthLogutRequested event,
+    AuthLogoutRequested event,
     Emitter<auth_s.AuthState> emit,
   ) async {
     if (state is auth_s.AuthLoading) return;
     emit(auth_s.AuthLoading());
-
+    log('Rozpoczeto wylogowanie');
     try {
       await authService.signOut();
-      log('test');
+      log('Wylogowanie zakonczone');
       emit(auth_s.AuthUnauthenticated());
     } catch (e) {
       emit(auth_s.AuthFailure('LOgout failed: $e'));

@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:notes_app/l10n/l10n_extension.dart';
+import 'package:notes_app/main.dart';
 import 'package:notes_app/src/core/di/di.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
@@ -20,9 +22,9 @@ class Notes extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt<NotesCubit>()..fetchNotes(),
         ),
-        BlocProvider(
-          create: (context) => getIt<AuthBloc>()..add(AuthCheckStatus()),
-        ),
+        // BlocProvider(
+        //   create: (context) => getIt<AuthBloc>()..add(AuthCheckStatus()),
+        // ),
       ],
       child: const NotesScreen(),
     );
@@ -34,49 +36,46 @@ class NotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        shadowColor: Colors.black,
-        title: Text(
-          context.l10n.notes,
-          style: const TextStyle(color: Colors.blue),
-        ),
-        leading: PopupMenuButton<String>(
-          color: Colors.white,
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'Log out',
-              child: Row(
-                children: [
-                  const Icon(Icons.logout_outlined),
-                  Text(context.l10n.logout),
-                ],
-              ),
-            ),
-          ],
-          icon: const Icon(Icons.menu, color: Colors.blue),
-          onSelected: (value) async {
-            if (value == 'Log out') {
-              context.read<AuthBloc>().add(AuthLogutRequested());
-            }
-          },
-        ),
-      ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          log('message');
-          if (state is AuthUnauthenticated) {
-            if (context.mounted) {
-              Navigator.of(context).pushReplacementNamed(
-                '/login',
-              );
-            }
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthUnauthenticated) {
+          if (context.mounted) {
+            context.go('/login');
           }
-        },
-        child: BlocBuilder<NotesCubit, NotesState>(
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 244, 244, 244),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 2,
+          shadowColor: Colors.black,
+          title: Text(
+            context.l10n.notes,
+            style: const TextStyle(color: Colors.blue),
+          ),
+          leading: PopupMenuButton<String>(
+            color: Colors.white,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'Log out',
+                child: Row(
+                  children: [
+                    const Icon(Icons.logout_outlined),
+                    Text(context.l10n.logout),
+                  ],
+                ),
+              ),
+            ],
+            icon: const Icon(Icons.menu, color: Colors.blue),
+            onSelected: (value) async {
+              if (value == 'Log out') {
+                context.read<AuthBloc>().add(AuthLogoutRequested());
+              }
+            },
+          ),
+        ),
+        body: BlocBuilder<NotesCubit, NotesState>(
           builder: (context, state) {
             if (state is NotesLoading) {
               return const Center(child: CircularProgressIndicator());
