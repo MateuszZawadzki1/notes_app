@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/models/note.dart';
+import 'package:notes_app/l10n/l10n_extension.dart';
+import 'package:notes_app/src/features/notes/data/models/note.dart';
 
 class NoteItem extends StatelessWidget {
   const NoteItem({
-    super.key,
     required this.note,
     required this.onDelete,
+    super.key,
   });
 
   final Note note;
-  final Function(int) onDelete;
+  final Future<void> Function(int) onDelete;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 15,
         vertical: 5,
       ),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () => _dialogBuilder(context),
         onLongPress: () => _dialogBuilderRemove(context),
         child: Container(
@@ -28,9 +30,9 @@ class NoteItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Created by: Username",
-                style: TextStyle(
+              Text(
+                '${context.l10n.createdby} ${username(note.author!)}',
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
                 ),
@@ -39,7 +41,10 @@ class NoteItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                "${note.text!.substring(0, note.text!.length < 100 ? note.text!.length : 100)}...", // Change it
+                "${note.text.replaceAll('\n', ' ').substring(
+                      0,
+                      note.text.length < 100 ? note.text.length : 100,
+                    ).trim()}...",
                 textAlign: TextAlign.left,
               ),
             ],
@@ -63,7 +68,7 @@ class NoteItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Username",
+                        username(note.author!),
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 24,
@@ -78,13 +83,13 @@ class NoteItem extends StatelessWidget {
                           Icons.close,
                           color: Colors.blue,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  Text(note.text!), // Change it
+                  Text(note.text),
                 ],
               ),
             ),
@@ -96,26 +101,36 @@ class NoteItem extends StatelessWidget {
 
   Future<void> _dialogBuilderRemove(BuildContext context) {
     return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Please confirm"),
-            content: const Text("Are you sure you want to remove this note?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("No"),
-              ),
-              TextButton(
-                  onPressed: () {
-                    onDelete(note.id!);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Yes"))
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please confirm'),
+          content: const Text('Are you sure you want to remove this note?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDelete(note.id!);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
+
+String toOneLineText(String text) {
+  return text.replaceAll('\n', ' ').trim();
+}
+
+String username(String text) {
+  return text.split('@')[0][0].toUpperCase() + text.split('@')[0].substring(1);
 }

@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+@injectable
 class AuthService {
   String? get accessToken =>
       Supabase.instance.client.auth.currentSession?.accessToken;
@@ -12,7 +16,7 @@ class AuthService {
       );
       return response.session != null; // Zwraca true, jeśli sesja istnieje
     } catch (e) {
-      print("Login error: $e");
+      log('Login error: $e');
       return false;
     }
   }
@@ -25,7 +29,7 @@ class AuthService {
       );
       return response.user != null; // Zwraca true, jeśli użytkownik utworzony
     } catch (e) {
-      print("Register error: $e");
+      log('Register error: $e');
       return false;
     }
   }
