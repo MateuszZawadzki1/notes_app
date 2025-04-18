@@ -4,16 +4,8 @@ import 'package:notes_app/src/core/di/di.config.dart';
 
 final getIt = GetIt.instance;
 
-// void registerDependencies() {
-//   getIt.registerFactory<ApiService>(() {
-//     final dioProvider = getIt<DioProvider>();
-//     final url = dotenv.get("REST_URL");
-//     return ApiService(dioProvider, baseUrl: url);
-//   });
-// }
-
 @InjectableInit()
 Future<void> configureDependecies() async {
   getIt.init();
-  //getIt.registerLazySingleton<Dio>(() => dioClient());
+  await getIt.allReady();
 }

@@ -31,7 +31,7 @@ class NoteItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${context.l10n.createdby} ${username(note.author!)}',
+                '${context.l10n.createdby} ${username(note.author ?? 'User')}',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
@@ -115,8 +115,10 @@ class NoteItem extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                onDelete(note.id!);
-                Navigator.of(context).pop();
+                if (note.id != null) {
+                  onDelete(note.id!);
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text('Yes'),
             ),
@@ -132,5 +134,7 @@ String toOneLineText(String text) {
 }
 
 String username(String text) {
-  return text.split('@')[0][0].toUpperCase() + text.split('@')[0].substring(1);
+  return text.isEmpty
+      ? 'User'
+      : text.split('@')[0][0].toUpperCase() + text.split('@')[0].substring(1);
 }

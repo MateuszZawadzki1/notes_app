@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes_app/src/core/di/di.dart';
+import 'package:notes_app/src/core/hive/hive_service.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_bloc.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_event.dart';
 import 'package:notes_app/src/features/auth/bloc/auth_state.dart' as auth_s;
@@ -45,6 +44,12 @@ void main() async {
   await dotenv.load();
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Local base
+  final hiveService = HiveService();
+  await hiveService.init();
+
+  // Online base
   await Supabase.initialize(
     url: dotenv.get('SUPABASE_URL'),
     anonKey: dotenv.get('API_KEY'),

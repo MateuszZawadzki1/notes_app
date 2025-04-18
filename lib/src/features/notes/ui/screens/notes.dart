@@ -17,16 +17,24 @@ class Notes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<NotesCubit>()..fetchNotes(),
-        ),
-        // BlocProvider(
-        //   create: (context) => getIt<AuthBloc>()..add(AuthCheckStatus()),
-        // ),
-      ],
-      child: const NotesScreen(),
+    return FutureBuilder<NotesCubit>(
+      future: getIt.getAsync<NotesCubit>(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<NotesCubit>.value(
+              value: snapshot.data!..fetchNotes(),
+            ),
+          ],
+          child: const NotesScreen(),
+        );
+      },
     );
   }
 }
@@ -74,9 +82,17 @@ class NotesScreen extends StatelessWidget {
               }
             },
           ),
+          actions: [
+            IconButton(
+              onPressed: () => context.read<NotesCubit>().synchronize(),
+              icon: Icon(Icons.sync),
+              tooltip: 'Synchronize',
+            )
+          ],
         ),
         body: BlocBuilder<NotesCubit, NotesState>(
           builder: (context, state) {
+            log('blocBuilder rebuild: $state');
             if (state is NotesLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is NotesLoaded) {
